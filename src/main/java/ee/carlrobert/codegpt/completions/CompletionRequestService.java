@@ -22,6 +22,7 @@ import ee.carlrobert.codegpt.settings.service.google.GoogleSettingsState;
 import ee.carlrobert.codegpt.settings.service.llama.LlamaSettings;
 import ee.carlrobert.codegpt.settings.service.ollama.OllamaSettings;
 import ee.carlrobert.codegpt.settings.service.openai.OpenAISettings;
+import ee.carlrobert.codegpt.settings.service.zhengyan.ZhengyanSettings;
 import ee.carlrobert.llm.client.DeserializationUtil;
 import ee.carlrobert.llm.client.anthropic.completion.ClaudeCompletionRequest;
 import ee.carlrobert.llm.client.anthropic.completion.ClaudeCompletionStandardMessage;
@@ -48,6 +49,9 @@ import java.util.stream.Stream;
 import okhttp3.Request;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
+
+import static ee.carlrobert.codegpt.client.Zhengyan.config.ZhengyanModel.GPT_3_5_TURBO;
+import static ee.carlrobert.codegpt.client.Zhengyan.config.ZhengyanModel.QWEN;
 
 @Service
 public final class CompletionRequestService {
@@ -94,6 +98,13 @@ public final class CompletionRequestService {
               callParameters),
           eventListener
       );
+      case ZHENGYAN -> CompletionClientProvider.getZhengyanClient().getChatCompletionAsync(
+              requestProvider.buildZhengyanChatCompletionRequest(
+                      ZhengyanSettings.getCurrentState().getModel(),
+                      callParameters),
+              ZhengyanSettings.getCurrentState().getModel(),
+              callParameters,
+              eventListener);
       case OPENAI -> CompletionClientProvider.getOpenAIClient().getChatCompletionAsync(
           requestProvider.buildOpenAIChatCompletionRequest(
               OpenAISettings.getCurrentState().getModel(),
@@ -144,6 +155,8 @@ public final class CompletionRequestService {
               eventListener);
       case OPENAI -> CompletionClientProvider.getOpenAIClient()
           .getCompletionAsync(requestProvider.buildOpenAIRequest(), eventListener);
+      case ZHENGYAN -> CompletionClientProvider.getZhengyanClient()
+              .getCodeCompletionAsync(requestDetails,QWEN.getCode(),eventListener);
       case CUSTOM_OPENAI -> EventSources.createFactory(httpClient).newEventSource(
           CodeCompletionRequestFactory.buildCustomRequest(requestDetails),
           new OpenAITextCompletionEventSourceListener(eventListener));
@@ -313,7 +326,7 @@ public final class CompletionRequestService {
           AzureSettings.getCurrentState().isUseAzureApiKeyAuthentication()
               ? CredentialKey.AZURE_OPENAI_API_KEY
               : CredentialKey.AZURE_ACTIVE_DIRECTORY_TOKEN);
-      case CODEGPT, CUSTOM_OPENAI, ANTHROPIC, LLAMA_CPP, OLLAMA -> true;
+      case CODEGPT, CUSTOM_OPENAI, ANTHROPIC, LLAMA_CPP, OLLAMA,ZHENGYAN -> true;
       case GOOGLE -> CredentialsStore.INSTANCE.isCredentialSet(CredentialKey.GOOGLE_API_KEY);
     };
   }
@@ -338,4 +351,5 @@ public final class CompletionRequestService {
         .filter(c -> c != null && !c.isBlank())
         .findFirst();
   }
+
 }

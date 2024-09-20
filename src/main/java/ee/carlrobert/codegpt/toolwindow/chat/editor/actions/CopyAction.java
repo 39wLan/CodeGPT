@@ -18,8 +18,8 @@ public class CopyAction extends TrackableAction {
   public CopyAction(@NotNull Editor editor) {
     super(
         editor,
-        CodeGPTBundle.get("toolwindow.chat.editor.action.copy.title"),
-        CodeGPTBundle.get("toolwindow.chat.editor.action.copy.description"),
+        "复制",
+            "复制当前代码",
         Actions.Copy,
         ActionType.COPY_CODE);
   }
@@ -36,7 +36,7 @@ public class CopyAction extends TrackableAction {
       locationOnScreen.y = locationOnScreen.y - 16;
 
       OverlayUtil.showInfoBalloon(
-              CodeGPTBundle.get("toolwindow.chat.editor.action.copy.success"),
+              "复制成功!",
               locationOnScreen);
     }
   }

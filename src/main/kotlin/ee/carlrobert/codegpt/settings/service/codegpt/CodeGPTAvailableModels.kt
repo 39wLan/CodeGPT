@@ -30,7 +30,10 @@ object CodeGPTAvailableModels {
                     Icons.CodeGPTModel,
                     FREE
                 ),
-                CodeGPTModel("WizardLM-2 (8x22B)", "wizardlm-2-8x22b", Icons.CodeGPTModel, FREE)
+                CodeGPTModel("WizardLM-2 (8x22B)", "wizardlm-2-8x22b", Icons.CodeGPTModel, FREE),
+                CodeGPTModel("GPT_3.5 Turbo", "gpt_3.5-turbo", Icons.Zhengyan, FREE),
+                CodeGPTModel("ACodex", "acodex", Icons.Zhengyan, FREE),
+                CodeGPTModel("千问72b","g3-pro",Icons.Zhengyan,FREE)
             )
 
             else -> BASE_CHAT_MODELS
@@ -49,7 +52,14 @@ object CodeGPTAvailableModels {
     )
 
     @JvmStatic
-    val ALL_CHAT_MODELS: List<CodeGPTModel> = BASE_CHAT_MODELS + listOf(
+    val ALL_ZY_MODELS: List<CodeGPTModel> = listOf(
+            CodeGPTModel("GPT_3.5 Turbo", "gpt_3.5-turbo", Icons.Zhengyan, FREE),
+            CodeGPTModel("ACodex", "acodex", Icons.Zhengyan, FREE),
+            CodeGPTModel("千问72b","g3-pro",Icons.Zhengyan,FREE)
+    )
+
+    @JvmStatic
+    val ALL_CHAT_MODELS: List<CodeGPTModel> = BASE_CHAT_MODELS + ALL_ZY_MODELS + listOf(
         CodeGPTModel("Llama 3 (8B) - FREE", "llama-3-8b", Icons.Meta, ANONYMOUS),
         CodeGPTModel("Code Llama (70B)", "codellama:chat", Icons.Meta, FREE),
         CodeGPTModel("Mixtral (8x22B)", "mixtral-8x22b", Icons.CodeGPTModel, FREE),
@@ -57,11 +67,16 @@ object CodeGPTAvailableModels {
         CodeGPTModel("WizardLM-2 (8x22B)", "wizardlm-2-8x22b", Icons.CodeGPTModel, FREE)
     )
 
+
+
     @JvmStatic
     val CODE_MODELS: List<CodeGPTModel> = listOf(
         CodeGPTModel("GPT-3.5 Turbo Instruct", "gpt-3.5-turbo-instruct", Icons.OpenAI, INDIVIDUAL),
         CodeGPTModel("StarCoder (16B)", "starcoder-16b", Icons.CodeGPTModel, FREE),
         CodeGPTModel("StarCoder (7B) - FREE", "starcoder-7b", Icons.CodeGPTModel, FREE),
+        CodeGPTModel("GPT_3.5 Turbo", "gpt_3.5-turbo", Icons.Zhengyan, FREE),
+        CodeGPTModel("ACodex", "acodex", Icons.Zhengyan, FREE),
+        CodeGPTModel("千问72b","g3-pro",Icons.Zhengyan,FREE),
         CodeGPTModel("Code Llama (70B)", "codellama:code", Icons.CodeGPTModel, FREE),
         CodeGPTModel("Code Llama Python (70B)", "codellama-python", Icons.CodeGPTModel, FREE),
         CodeGPTModel("WizardCoder Python (34B)", "wizardcoder-python", Icons.CodeGPTModel, FREE),

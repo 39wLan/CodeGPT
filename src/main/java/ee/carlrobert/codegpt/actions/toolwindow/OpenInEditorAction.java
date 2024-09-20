@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class OpenInEditorAction extends AnAction {
 
   public OpenInEditorAction() {
-    super("Open In Editor", "Open conversation in editor", AllIcons.Actions.SplitVertically);
+    super("导出会话", "导出当前窗口聊天记录", AllIcons.ToolbarDecorator.Export);
     EditorActionsUtil.registerAction(this);
   }
 
@@ -46,13 +46,13 @@ public class OpenInEditorAction extends AnAction {
         var fileContent = currentConversation
             .getMessages()
             .stream()
-            .map(it -> format("### User:%n%s%n### CodeGPT:%n%s%n", it.getPrompt(),
+            .map(it -> format("### User:%n%s%n### 常青藤:%n%s%n", it.getPrompt(),
                 it.getResponse()))
             .collect(Collectors.joining());
         VirtualFile file = new LightVirtualFile(fileName, fileContent);
         FileEditorManager.getInstance(project).openFile(file, true);
         var toolWindow = requireNonNull(
-            ToolWindowManager.getInstance(project).getToolWindow("CodeGPT"));
+            ToolWindowManager.getInstance(project).getToolWindow("常青藤"));
         toolWindow.hide();
       }
     } finally {

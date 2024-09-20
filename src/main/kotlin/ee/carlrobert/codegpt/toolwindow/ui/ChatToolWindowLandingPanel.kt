@@ -1,5 +1,6 @@
 package ee.carlrobert.codegpt.toolwindow.ui
 
+import com.intellij.icons.AllIcons
 import com.intellij.ui.components.ActionLink
 import com.intellij.util.ui.JBUI
 import ee.carlrobert.codegpt.Icons
@@ -23,7 +24,7 @@ class ChatToolWindowLandingPanel(onAction: (LandingPanelAction, Point) -> Unit) 
         return JPanel(BorderLayout()).apply {
             add(createTextPane(getWelcomeMessage(), false), BorderLayout.NORTH)
             add(createActionsListPanel(onAction), BorderLayout.CENTER)
-            add(createTextPane(getCautionMessage(), false), BorderLayout.SOUTH)
+//            add(createTextPane(getCautionMessage(), false), BorderLayout.SOUTH)
         }
     }
 
@@ -48,7 +49,7 @@ class ChatToolWindowLandingPanel(onAction: (LandingPanelAction, Point) -> Unit) 
         return ActionLink(action.userMessage, ActionListener { event ->
             onAction(action, (event.source as ActionLink).locationOnScreen)
         }).apply {
-            icon = Icons.Sparkle
+            icon = AllIcons.Actions.RunToCursor
         }
     }
 
@@ -56,7 +57,7 @@ class ChatToolWindowLandingPanel(onAction: (LandingPanelAction, Point) -> Unit) 
         return """
             <html>
             <p style="margin-top: 4px; margin-bottom: 4px;">
-            Hi <strong>${GeneralSettings.getCurrentState().displayName}</strong>, I'm CodeGPT! You can ask me anything, but most people request help with their code. Here are a few examples of what you can ask me:
+            你好 <strong>${GeneralSettings.getCurrentState().displayName}</strong>, 我是常青藤辅助编程小助手！您可以问我任何问题，我可以帮助您解决一些代码相关的问题。以下是您可以问我的一些问题示例：
             </p>
             </html>
         """.trimIndent()
@@ -66,7 +67,7 @@ class ChatToolWindowLandingPanel(onAction: (LandingPanelAction, Point) -> Unit) 
         return """
             <html>
             <p style="margin-top: 4px; margin-bottom: 4px;">
-            I can sometimes make mistakes, so please double-check anything critical.
+            当然,我有时可能会犯错误，请注意检查我的回答内容哦~
             </p>
             </html>
         """.trimIndent()
@@ -79,19 +80,21 @@ enum class LandingPanelAction(
     val prompt: String
 ) {
     FIND_BUGS(
-        "Find Bugs",
-        "Find bugs in this code",
-        "Find bugs and output code with bugs fixed in the selected code: {{selectedCode}}"
+        "代码解释",
+        "解释并分析这段代码",
+            "请解释并分析这段代码:\n {{selectedCode}}"
     ),
     WRITE_TESTS(
-        "Write Tests",
-        "Write unit tests for this code",
-        "Write unit tests for the selected code: {{selectedCode}}"
+        "单元测试",
+        "为这段代码编写单元测试",
+        "请按照阿里的代码规范，为该代码生成单元测试:\n" +
+                " {{selectedCode}}"
     ),
     EXPLAIN(
-        "Explain",
-        "Explain the selected code",
-        "Explain the selected code: {{selectedCode}}"
+        "代码优化",
+        "对这段代码进行优化",
+        "请针对代码bug、风格、性能、安全这四个方面进行优化，并重写代码:\n" +
+                " {{selectedCode}}"
     )
 }
 

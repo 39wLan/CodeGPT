@@ -15,7 +15,7 @@ class ShowEditorActionGroupAction : AnAction() {
         val actionManager = ActionManager.getInstance()
         val actionGroup = actionManager.getAction("action.editor.group.EditorActionGroup")
         JBPopupFactory.getInstance().createActionGroupPopup(
-            CodeGPTBundle.get("project.label"), (actionGroup as ActionGroup), e.dataContext,
+            "常青藤", (actionGroup as ActionGroup), e.dataContext,
             ActionSelectionAid.ALPHA_NUMBERING, true
         ).show(RelativePoint(MouseInfo.getPointerInfo().location))
     }

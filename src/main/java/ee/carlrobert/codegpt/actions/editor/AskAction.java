@@ -1,5 +1,6 @@
 package ee.carlrobert.codegpt.actions.editor;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class AskAction extends AnAction {
 
   public AskAction() {
-    super("New Chat", "Chat with CodeGPT", Icons.Sparkle);
+    super("新建会话", "创建新的聊天窗口", AllIcons.Actions.Find);
     EditorActionsUtil.registerAction(this);
   }
 

@@ -41,6 +41,12 @@ enum class CustomServiceTemplate(
         CustomServiceChatCompletionTemplate.OPENAI,
         CustomServiceCodeCompletionTemplate.OPENAI
     ),
+    ZHENGYAN(
+            "ZHENGYAN",
+            "https://zhengyan.sinosig.com/docs/",
+            CustomServiceChatCompletionTemplate.ZY_CHAT_GPT,
+            CustomServiceCodeCompletionTemplate.OPENAI
+    ),
     PERPLEXITY(
         "Perplexity AI",
         "https://docs.perplexity.ai/reference/post_chat_completions",

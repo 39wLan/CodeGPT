@@ -26,7 +26,7 @@ public class NewFileAction extends AbstractAction {
   private final EditorEx editor;
 
   public NewFileAction(@NotNull EditorEx editor, String fileExtension) {
-    super("Create New File", Actions.AddFile);
+    super("导出为文件", Actions.AddFile);
     this.fileExtension = fileExtension;
     this.editor = editor;
   }
@@ -50,11 +50,11 @@ public class NewFileAction extends AbstractAction {
           editor.getDocument().getText());
       var virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
       if (virtualFile == null) {
-        throw new RuntimeException("Couldn't find the saved virtual file");
+        throw new RuntimeException("找不到保存的虚拟文件");
       }
       var psiFile = PsiManager.getInstance(project).findFile(virtualFile);
       if (psiFile == null) {
-        throw new RuntimeException("Couldn't find the saved psi file");
+        throw new RuntimeException("找不到保存的 PSI 文件");
       }
 
       EditorHelper.openInEditor(psiFile);

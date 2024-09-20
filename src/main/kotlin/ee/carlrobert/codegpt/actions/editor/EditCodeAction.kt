@@ -20,14 +20,14 @@ class EditCodeAction : BaseEditorAction {
         "Allow LLM to edit code directly in your editor",
         icon
     ) {
-        registerCustomShortcutSet(
-            CustomShortcutSet(
-                KeyStroke.getKeyStroke(
-                    KeyEvent.VK_E,
-                    InputEvent.SHIFT_DOWN_MASK or InputEvent.META_DOWN_MASK
-                )
-            ), null
-        )
+//        registerCustomShortcutSet(
+//            CustomShortcutSet(
+//                KeyStroke.getKeyStroke(
+//                    KeyEvent.VK_E,
+//                    InputEvent.SHIFT_DOWN_MASK or InputEvent.META_DOWN_MASK
+//                )
+//            ), null
+//        )
         EditorActionsUtil.registerAction(this)
     }
 

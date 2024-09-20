@@ -15,7 +15,7 @@ public class ClearChatWindowAction extends AnAction {
   private final Runnable onActionPerformed;
 
   public ClearChatWindowAction(Runnable onActionPerformed) {
-    super("Clear Window", "Clears a chat window", AllIcons.General.Reset);
+    super("清空会话", "清空当前会话记录", AllIcons.General.Reset);
     this.onActionPerformed = onActionPerformed;
     EditorActionsUtil.registerAction(this);
   }

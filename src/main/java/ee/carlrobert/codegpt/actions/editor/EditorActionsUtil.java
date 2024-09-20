@@ -25,14 +25,24 @@ import org.apache.commons.text.CaseUtils;
 
 public class EditorActionsUtil {
 
-  public static final Map<String, String> DEFAULT_ACTIONS = new LinkedHashMap<>(Map.of(
-      "Find Bugs", "Find bugs and output code with bugs "
-          + "fixed in the following code: {{selectedCode}}",
-      "Write Tests", "Write Tests for the selected code {{selectedCode}}",
-      "Explain", "Explain the selected code {{selectedCode}}",
-      "Refactor", "Refactor the selected code {{selectedCode}}",
-      "Optimize", "Optimize the selected code {{selectedCode}}"));
+  public static final Map<String, String> DEFAULT_ACTIONS = new LinkedHashMap<>();
 
+  static {
+    DEFAULT_ACTIONS.put("代码解释", "请解释并分析这段代码:\n {{selectedCode}}");
+    DEFAULT_ACTIONS.put("代码补全", "请按照阿里的代码规范进行代码补全，并重写代码:\n {{selectedCode}}");
+    DEFAULT_ACTIONS.put("代码优化", "请针对代码风格、性能、可读性这三个方面进行优化，并重写代码:\n {{selectedCode}}");
+    DEFAULT_ACTIONS.put("生成注释", "请生成这段代码的注释:\n {{selectedCode}}");
+    DEFAULT_ACTIONS.put("查找bug", "请查找这段代码的bug并给出解决方案:\n {{selectedCode}}");
+    DEFAULT_ACTIONS.put("单元测试", "请按照阿里的代码规范，为该代码生成单元测试:\n {{selectedCode}}");
+    DEFAULT_ACTIONS.put("安全检查", "请检查代码中存在的安全问题并进行重写:\n {{selectedCode}}");
+    DEFAULT_ACTIONS.put("Spring代码生成", "通过如下代码，按照Spring Boot框架及阿里开发规范生成实体类、Controller类、Service接口、Dao接口、Mapper接口、实现类以及相关的XML配置文件,并在其中实现基础的增删改查操作:\n {{selectedCode}}");
+//    DEFAULT_ACTIONS.put("性能检查", "请检查代码中存在的性能问题并进行重写:\n {{selectedCode}}");
+//    DEFAULT_ACTIONS.put("代码生成", "请按照阿里的代码规范，为如下描述生成Java代码:\n {{selectedCode}}");
+//    DEFAULT_ACTIONS.put("风格检查", "请检查代码风格是否符合阿里的代码规范，并进行重写:\n {{selectedCode}}");
+//    DEFAULT_ACTIONS.put("可读性优化", "请提高代码可读性，并按照阿里的代码规范进行重写:\n {{selectedCode}}");
+
+
+  }
   public static final String[][] DEFAULT_ACTIONS_ARRAY = toArray(DEFAULT_ACTIONS);
 
   public static String[][] toArray(Map<String, String> actionsMap) {
@@ -48,8 +58,8 @@ public class EditorActionsUtil {
     if (actionGroup instanceof DefaultActionGroup group) {
       group.removeAll();
       group.add(new AskAction());
-      group.add(new EditCodeAction(Actions.EditSource));
-      group.add(new CustomPromptAction());
+//      group.add(new EditCodeAction(Actions.EditSource));
+      group.add(new EditPromptAction());
       group.addSeparator();
 
       var configuredActions = ConfigurationSettings.getCurrentState().getTableData();
@@ -74,13 +84,19 @@ public class EditorActionsUtil {
                     .flatMap(Collection::stream)
                     .map(ReferencedFile::getFilePath)
                     .toList());
+            if(DEFAULT_ACTIONS.containsKey(label)){
+              message.setActionType(label);
+            }else {
+              message.setActionType("自定义Prompt");
+            }
             toolWindowContentManager.sendMessage(message);
           }
         };
+
         group.add(action);
       });
-      group.addSeparator();
-      group.add(new IncludeFilesInContextAction("action.includeFileInContext.title"));
+//      group.addSeparator();
+//      group.add(new IncludeFilesInContextAction("action.includeFileInContext.title"));
     }
   }
 

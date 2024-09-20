@@ -1,5 +1,6 @@
 package ee.carlrobert.codegpt.toolwindow.chat;
 
+import static ee.carlrobert.codegpt.client.Zhengyan.config.ZhengyanModel.isZhengyanModel;
 import static ee.carlrobert.codegpt.completions.CompletionRequestProvider.getPromptWithContext;
 import static ee.carlrobert.codegpt.ui.UIUtil.createScrollPaneWithSmartScroller;
 import static java.lang.String.format;
@@ -261,11 +262,16 @@ public class ChatToolWindowTabPanel implements Disposable {
         var fileExtension = FileUtil.getFileExtension(
             ((EditorImpl) editor).getVirtualFile().getName());
         message = new Message(text + format("%n```%s%n%s%n```", fileExtension, selectedText));
+        message.setCodeLanguage(fileExtension);
         selectionModel.removeSelection();
       }
     }
     message.setUserMessage(text);
-    sendMessage(message, ConversationType.DEFAULT);
+    if (isZhengyanModel(conversation.getModel())){
+      sendMessage(message,ConversationType.ZY_CHAT);
+    }else {
+      sendMessage(message, ConversationType.DEFAULT);
+    }
   }
 
   private JPanel createUserPromptPanel(ServiceType selectedService) {

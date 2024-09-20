@@ -15,7 +15,7 @@ object CredentialsStore {
         credentialsMap.getOrPut(key) {
             PasswordSafe.instance.getPassword(
                 CredentialAttributes(
-                    generateServiceName("CodeGPT", key.name)
+                    generateServiceName("常青藤", key.name)
                 )
             ) ?: ""
         }.takeIf { !it.isNullOrEmpty() }
@@ -26,7 +26,7 @@ object CredentialsStore {
 
         if (prevPassword != password) {
             val credentialAttributes =
-                CredentialAttributes(generateServiceName("CodeGPT", key.name))
+                CredentialAttributes(generateServiceName("常青藤", key.name))
             PasswordSafe.instance.setPassword(credentialAttributes, password)
         }
     }
@@ -36,6 +36,7 @@ object CredentialsStore {
     enum class CredentialKey {
         CODEGPT_API_KEY,
         OPENAI_API_KEY,
+        ZY_API_KEY,
         CUSTOM_SERVICE_API_KEY,
         ANTHROPIC_API_KEY,
         AZURE_OPENAI_API_KEY,

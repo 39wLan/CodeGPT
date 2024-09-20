@@ -18,6 +18,7 @@ import ee.carlrobert.codegpt.settings.service.google.GoogleSettings;
 import ee.carlrobert.codegpt.settings.service.llama.LlamaSettings;
 import ee.carlrobert.codegpt.settings.service.ollama.OllamaSettings;
 import ee.carlrobert.codegpt.settings.service.openai.OpenAISettings;
+import ee.carlrobert.codegpt.settings.service.zhengyan.ZhengyanSettings;
 import ee.carlrobert.codegpt.util.ApplicationUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,6 +60,9 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
     switch (provider) {
       case OPENAI:
         OpenAISettings.getCurrentState().setModel(conversation.getModel());
+        break;
+      case ZHENGYAN:
+        ZhengyanSettings.getCurrentState().setModel(conversation.getModel());
         break;
       case LLAMA_CPP:
         var llamaSettings = LlamaSettings.getCurrentState();
@@ -110,6 +114,8 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
             .getState()
             .getCodeCompletionSettings()
             .getModel();
+      case ZHENGYAN:
+        return ZhengyanSettings.getCurrentState().getModel();
       case OPENAI:
         return OpenAISettings.getCurrentState().getModel();
       case ANTHROPIC:

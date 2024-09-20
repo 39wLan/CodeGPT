@@ -5,9 +5,9 @@ import javax.swing.Icon;
 
 public final class Icons {
 
-  public static final Icon Default = IconLoader.getIcon("/icons/codegpt.svg", Icons.class);
+  public static final Icon Default = IconLoader.getIcon("/icons/sinosig.svg", Icons.class);
   public static final Icon DefaultSmall =
-      IconLoader.getIcon("/icons/codegpt-small.svg", Icons.class);
+      IconLoader.getIcon("/icons/sinosig.svg", Icons.class);
   public static final Icon CodeGPTModel =
       IconLoader.getIcon("/icons/codegpt-model.svg", Icons.class);
   public static final Icon Anthropic = IconLoader.getIcon("/icons/anthropic.svg", Icons.class);
@@ -16,6 +16,7 @@ public final class Icons {
   public static final Icon Google = IconLoader.getIcon("/icons/google.svg", Icons.class);
   public static final Icon Llama = IconLoader.getIcon("/icons/llama.svg", Icons.class);
   public static final Icon OpenAI = IconLoader.getIcon("/icons/openai.svg", Icons.class);
+  public static final Icon Zhengyan = IconLoader.getIcon("/icons/sinosig.svg", Icons.class);
   public static final Icon Meta = IconLoader.getIcon("/icons/meta.svg", Icons.class);
   public static final Icon Send = IconLoader.getIcon("/icons/send.svg", Icons.class);
   public static final Icon Sparkle = IconLoader.getIcon("/icons/sparkle.svg", Icons.class);

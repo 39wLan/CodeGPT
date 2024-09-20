@@ -110,7 +110,7 @@ public class ConfigurationComponent {
     commitMessagePromptTextArea.setBorder(JBUI.Borders.empty(8, 4));
 
     checkForPluginUpdatesCheckBox = new JBCheckBox(
-        CodeGPTBundle.get("configurationConfigurable.checkForPluginUpdates.label"),
+        "自动检查插件更新",
         configuration.isCheckForPluginUpdates());
     checkForNewScreenshotsCheckBox = new JBCheckBox(
         CodeGPTBundle.get("configurationConfigurable.checkForNewScreenshots.label"),
@@ -122,7 +122,7 @@ public class ConfigurationComponent {
         CodeGPTBundle.get("configurationConfigurable.enableMethodNameGeneration.label"),
         configuration.isMethodNameGenerationEnabled());
     autoFormattingCheckBox = new JBCheckBox(
-        CodeGPTBundle.get("configurationConfigurable.autoFormatting.label"),
+        "启用自动代码格式化",
         configuration.isAutoFormattingEnabled());
     autocompletionPostProcessingCheckBox = new JBCheckBox(
         CodeGPTBundle.get("configurationConfigurable.autocompletionPostProcessing.label"),
@@ -133,18 +133,18 @@ public class ConfigurationComponent {
         .addComponent(tablePanel)
         .addVerticalGap(4)
         .addComponent(checkForPluginUpdatesCheckBox)
-        .addComponent(checkForNewScreenshotsCheckBox)
-        .addComponent(openNewTabCheckBox)
-        .addComponent(methodNameGenerationCheckBox)
-        .addComponent(autoFormattingCheckBox)
-        .addComponent(autocompletionPostProcessingCheckBox)
-        .addVerticalGap(4)
-        .addComponent(new TitledSeparator(
-            CodeGPTBundle.get("configurationConfigurable.section.assistant.title")))
-        .addComponent(createAssistantConfigurationForm())
-        .addComponent(new TitledSeparator(
-            CodeGPTBundle.get("configurationConfigurable.section.commitMessage.title")))
-        .addComponent(createCommitMessageConfigurationForm())
+//        .addComponent(checkForNewScreenshotsCheckBox)
+//        .addComponent(openNewTabCheckBox)
+//        .addComponent(methodNameGenerationCheckBox)
+//        .addComponent(autoFormattingCheckBox)
+//        .addComponent(autocompletionPostProcessingCheckBox)
+//        .addVerticalGap(4)
+//        .addComponent(new TitledSeparator(
+//            CodeGPTBundle.get("configurationConfigurable.section.assistant.title")))
+//        .addComponent(createAssistantConfigurationForm())
+//        .addComponent(new TitledSeparator(
+//            CodeGPTBundle.get("configurationConfigurable.section.commitMessage.title")))
+//        .addComponent(createCommitMessageConfigurationForm())
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
   }
@@ -198,7 +198,7 @@ public class ConfigurationComponent {
 
   private JPanel createTablePanel() {
     return ToolbarDecorator.createDecorator(table)
-        .setPreferredSize(new Dimension(table.getPreferredSize().width, 140))
+        .setPreferredSize(new Dimension(table.getPreferredSize().width, 180))
         .setAddAction(anActionButton -> {
           getModel().addRow(new Object[]{"", ""});
           int lastRowIndex = getModel().getRowCount() - 1;
@@ -315,7 +315,7 @@ public class ConfigurationComponent {
 
     RevertToDefaultsActionButton() {
       super(
-          CodeGPTBundle.get("configurationConfigurable.table.action.revertToDefaults.text"),
+          "恢复默认设置",
           AllIcons.Actions.Rollback);
     }
 
@@ -336,8 +336,7 @@ public class ConfigurationComponent {
   class KeymapActionButton extends AnActionButton {
 
     KeymapActionButton() {
-      super(
-          CodeGPTBundle.get("configurationConfigurable.table.action.addKeymap.text"),
+      super("添加快捷方式",
           Nodes.KeymapEditor);
     }
 

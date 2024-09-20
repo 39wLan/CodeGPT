@@ -1,10 +1,14 @@
 package ee.carlrobert.codegpt.toolwindow.chat;
 
 import static com.intellij.openapi.ui.Messages.OK;
+import static ee.carlrobert.codegpt.client.Zhengyan.config.ZhengyanModel.isZhengyanModel;
+import static ee.carlrobert.codegpt.client.Zhengyan.util.ConvertUtil.getCurrentTime;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import ee.carlrobert.codegpt.EncodingManager;
+import ee.carlrobert.codegpt.client.Zhengyan.task.ChatFeedbackTask;
+import ee.carlrobert.codegpt.client.Zhengyan.util.IvyThreadPool;
 import ee.carlrobert.codegpt.completions.CallParameters;
 import ee.carlrobert.codegpt.completions.CompletionResponseEventListener;
 import ee.carlrobert.codegpt.conversations.Conversation;
@@ -121,6 +125,12 @@ abstract class ToolWindowCompletionResponseEventListener implements
     if (containsResults) {
       message.setSerpResults(serpResults);
     }
+    if(isZhengyanModel(callParameters.getConversation().getModel())){
+      message.setResStatus(200);
+      message.setEndTime(getCurrentTime());
+      message.setCostTime(System.currentTimeMillis() - message.getStartTmp());
+    }
+    IvyThreadPool.getIvyThreadPool().submit(new ChatFeedbackTask(message, true));
     SwingUtilities.invokeLater(() -> {
       try {
         responsePanel.enableActions();

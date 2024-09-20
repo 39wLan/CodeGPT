@@ -8,6 +8,8 @@ import com.knuddels.jtokkit.api.Encoding;
 import com.knuddels.jtokkit.api.EncodingRegistry;
 import com.knuddels.jtokkit.api.EncodingType;
 import com.knuddels.jtokkit.api.IntArrayList;
+import ee.carlrobert.codegpt.client.Zhengyan.completion.ZhengyanChatCompletionMessage;
+import ee.carlrobert.codegpt.client.Zhengyan.completion.ZhengyanChatCompletionStandardMessage;
 import ee.carlrobert.codegpt.conversations.Conversation;
 import ee.carlrobert.codegpt.conversations.message.Message;
 import ee.carlrobert.llm.client.openai.completion.request.OpenAIChatCompletionDetailedMessage;
@@ -50,6 +52,13 @@ public final class EncodingManager {
             ((OpenAIChatCompletionDetailedMessage) message).getRole(),
             ((OpenAIMessageTextContent) it).getText()))
         .sum();
+  }
+
+  public int countMessageTokens(ZhengyanChatCompletionMessage message) {
+    if (message instanceof ZhengyanChatCompletionStandardMessage standardMessage) {
+      return countMessageTokens(standardMessage.getRole(), standardMessage.getContent());
+    }
+    return 0;
   }
 
   public int countMessageTokens(String role, String content) {

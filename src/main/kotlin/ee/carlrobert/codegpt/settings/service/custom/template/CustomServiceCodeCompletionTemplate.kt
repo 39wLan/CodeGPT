@@ -1,5 +1,7 @@
 package ee.carlrobert.codegpt.settings.service.custom.template
 
+import ee.carlrobert.codegpt.client.Zhengyan.config.ZhengyanConfig.ZY_GPT_KEY
+
 enum class CustomServiceCodeCompletionTemplate(
     val url: String,
     val headers: MutableMap<String, String>,
@@ -14,6 +16,11 @@ enum class CustomServiceCodeCompletionTemplate(
         "https://{your-resource-name}.openai.azure.com/openai/deployments/{deployment-id}/completions?api-version=2023-05-15",
         getDefaultHeaders("api-key", "\$CUSTOM_SERVICE_API_KEY"),
         getDefaultBodyParams(emptyMap())
+    ),
+    ZY_CHAT_GPT(
+            "https://zhengyan.sinosig.com/ai/ability/gpt/v1/chat",
+            getZYHeaders("Authorization",ZY_GPT_KEY),
+            getZYBodyParams(emptyMap())
     ),
     DEEP_INFRA(
         "https://api.deepinfra.com/v1/inference/codellama/CodeLlama-70b-Instruct-hf",

@@ -17,8 +17,8 @@ public class ReplaceSelectionAction extends TrackableAction {
   public ReplaceSelectionAction(@NotNull Editor editor) {
     super(
         editor,
-        CodeGPTBundle.get("toolwindow.chat.editor.action.replaceSelection.title"),
-        CodeGPTBundle.get("toolwindow.chat.editor.action.replaceSelection.description"),
+        "替换选中内容",
+        "替换编辑器中选定的代码",
         Actions.Replace,
         ActionType.REPLACE_IN_MAIN_EDITOR);
   }

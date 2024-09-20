@@ -24,7 +24,7 @@ public class CodeGPTStatusBarWidget extends EditorBasedStatusBarPopup {
 
   @Override
   protected @NotNull WidgetState getWidgetState(@Nullable VirtualFile file) {
-    var state = new WidgetState(CodeGPTBundle.get("statusBar.widget.tooltip"), "", true);
+    var state = new WidgetState("常青藤:设置", "", true);
     state.setIcon(Icons.DefaultSmall);
     return state;
   }
@@ -33,7 +33,7 @@ public class CodeGPTStatusBarWidget extends EditorBasedStatusBarPopup {
   protected @Nullable ListPopup createPopup(@NotNull DataContext context) {
     return JBPopupFactory.getInstance()
         .createActionGroupPopup(
-            CodeGPTBundle.get("project.label"),
+            "常青藤",
             (ActionGroup) ActionManager.getInstance().getAction("codegpt.statusBarPopup"),
             context,
             ActionSelectionAid.SPEEDSEARCH,

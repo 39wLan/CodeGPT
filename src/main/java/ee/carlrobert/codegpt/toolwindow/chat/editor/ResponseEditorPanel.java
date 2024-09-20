@@ -134,9 +134,9 @@ public class ResponseEditorPanel extends JPanel implements Disposable {
   private String getLinkText(boolean expanded) {
     return expanded
         ? format(
-        CodeGPTBundle.get("toolwindow.chat.editor.action.expand"),
+            "展开 (+%s 行)",
         ((EditorEx) editor).getDocument().getLineCount() - 1)
-        : CodeGPTBundle.get("toolwindow.chat.editor.action.collapse");
+        :"折叠";
   }
 
   private ActionLink createExpandLink(EditorEx editorEx) {
@@ -176,7 +176,7 @@ public class ResponseEditorPanel extends JPanel implements Disposable {
 
     var toolbar = ActionManager.getInstance()
         .createActionToolbar("NAVIGATION_BAR_TOOLBAR", actionGroup, true);
-    actionGroup.add(new AnAction("Editor Actions", "Editor Actions", General.GearPlain) {
+    actionGroup.add(new AnAction("更多操作", "更多操作", General.GearPlain) {
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
         var inputEvent = e.getInputEvent();

@@ -110,19 +110,19 @@ public final class ChatToolWindowContentManager {
 
   public @NotNull ToolWindow getToolWindow() {
     var toolWindowManager = ToolWindowManager.getInstance(project);
-    var toolWindow = toolWindowManager.getToolWindow("CodeGPT");
+    var toolWindow = toolWindowManager.getToolWindow("常青藤");
     // https://intellij-support.jetbrains.com/hc/en-us/community/posts/11533368171026/comments/11538403084562
     return Objects.requireNonNullElseGet(toolWindow, () -> toolWindowManager
             .registerToolWindow(RegisterToolWindowTask.closable(
-                    "CodeGPT",
-                    () -> "CodeGPT",
+                    "常青藤",
+                    () -> "常青藤",
                     Icons.DefaultSmall,
                     ToolWindowAnchor.RIGHT)));
   }
 
   private Optional<Content> tryFindFirstChatTabContent() {
     return Arrays.stream(getToolWindow().getContentManager().getContents())
-        .filter(content -> "Chat".equals(content.getTabName()))
+        .filter(content -> "会话".equals(content.getTabName()))
         .findFirst();
   }
 }

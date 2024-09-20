@@ -13,7 +13,7 @@ public class CreateNewConversationAction extends AnAction {
   private final Runnable onCreate;
 
   public CreateNewConversationAction(Runnable onCreate) {
-    super("Create New Chat", "Create new chat", AllIcons.General.Add);
+    super("新建会话", "新建会话", AllIcons.General.Add);
     this.onCreate = onCreate;
     EditorActionsUtil.registerAction(this);
   }

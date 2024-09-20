@@ -7,4 +7,15 @@ public enum ConversationType {
   FIX_COMPILE_ERRORS,
   MULTI_FILE,
   INLINE_COMPLETION,
+  ZY_CHAT;
+
+  @Override
+  public String toString() {
+    switch (name()){
+      case "ZY_CHAT":
+        return "文本问答";
+      default:
+        return name();
+    }
+  }
 }

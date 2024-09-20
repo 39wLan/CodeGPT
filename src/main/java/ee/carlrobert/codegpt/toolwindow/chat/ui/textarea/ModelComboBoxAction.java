@@ -1,13 +1,6 @@
 package ee.carlrobert.codegpt.toolwindow.chat.ui.textarea;
 
-import static ee.carlrobert.codegpt.settings.service.ServiceType.ANTHROPIC;
-import static ee.carlrobert.codegpt.settings.service.ServiceType.AZURE;
-import static ee.carlrobert.codegpt.settings.service.ServiceType.CODEGPT;
-import static ee.carlrobert.codegpt.settings.service.ServiceType.CUSTOM_OPENAI;
-import static ee.carlrobert.codegpt.settings.service.ServiceType.GOOGLE;
-import static ee.carlrobert.codegpt.settings.service.ServiceType.LLAMA_CPP;
-import static ee.carlrobert.codegpt.settings.service.ServiceType.OLLAMA;
-import static ee.carlrobert.codegpt.settings.service.ServiceType.OPENAI;
+import static ee.carlrobert.codegpt.settings.service.ServiceType.*;
 import static java.lang.String.format;
 
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
@@ -21,6 +14,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import ee.carlrobert.codegpt.CodeGPTKeys;
 import ee.carlrobert.codegpt.Icons;
+import ee.carlrobert.codegpt.client.Zhengyan.config.ZhengyanModel;
 import ee.carlrobert.codegpt.completions.llama.LlamaModel;
 import ee.carlrobert.codegpt.settings.GeneralSettings;
 import ee.carlrobert.codegpt.settings.service.ServiceType;
@@ -31,6 +25,7 @@ import ee.carlrobert.codegpt.settings.service.custom.CustomServiceSettings;
 import ee.carlrobert.codegpt.settings.service.llama.LlamaSettings;
 import ee.carlrobert.codegpt.settings.service.ollama.OllamaSettings;
 import ee.carlrobert.codegpt.settings.service.openai.OpenAISettings;
+import ee.carlrobert.codegpt.settings.service.zhengyan.ZhengyanSettings;
 import ee.carlrobert.llm.client.openai.completion.OpenAIChatCompletionModel;
 import java.util.Arrays;
 import java.util.List;
@@ -90,69 +85,78 @@ public class ModelComboBoxAction extends ComboBoxAction {
     var presentation = ((ComboBoxButton) button).getPresentation();
     var actionGroup = new DefaultActionGroup();
 
-    if (availableProviders.contains(CODEGPT)) {
-      actionGroup.addSeparator("CodeGPT");
-      actionGroup.addAll(getCodeGPTModelActions(project, presentation));
-    }
-    if (availableProviders.contains(OPENAI)) {
-      actionGroup.addSeparator("OpenAI");
+    if (availableProviders.contains(ZHENGYAN)) {
+      actionGroup.addSeparator("正言");
       List.of(
-              OpenAIChatCompletionModel.GPT_4_O,
-              OpenAIChatCompletionModel.GPT_4_VISION_PREVIEW,
-              OpenAIChatCompletionModel.GPT_4_0125_128k,
-              OpenAIChatCompletionModel.GPT_3_5_0125_16k)
-          .forEach(model -> actionGroup.add(createOpenAIModelAction(model, presentation)));
+                      ZhengyanModel.GPT_3_5_TURBO,
+                      ZhengyanModel.ACodex,
+                      ZhengyanModel.QWEN)
+              .forEach(model -> actionGroup.add(createZhengyanModelAction(model, presentation)));
     }
-    if (availableProviders.contains(CUSTOM_OPENAI)) {
-      actionGroup.addSeparator("Custom OpenAI");
-      actionGroup.add(createModelAction(
-          CUSTOM_OPENAI,
-          ApplicationManager.getApplication().getService(CustomServiceSettings.class)
-              .getState()
-              .getTemplate()
-              .getProviderName(),
-          Icons.OpenAI,
-          presentation));
-    }
-    if (availableProviders.contains(ANTHROPIC)) {
-      actionGroup.addSeparator("Anthropic");
-      actionGroup.add(createModelAction(
-          ANTHROPIC,
-          "Anthropic (Claude)",
-          Icons.Anthropic,
-          presentation));
-    }
-    if (availableProviders.contains(AZURE)) {
-      actionGroup.addSeparator("Azure");
-      actionGroup.add(
-          createModelAction(AZURE, "Azure OpenAI", Icons.Azure, presentation));
-    }
-    if (availableProviders.contains(GOOGLE)) {
-      actionGroup.addSeparator("Google");
-      actionGroup.add(createModelAction(
-          GOOGLE,
-          "Google (Gemini)",
-          Icons.Google,
-          presentation));
-    }
-    if (availableProviders.contains(LLAMA_CPP)) {
-      actionGroup.addSeparator("LLaMA C/C++");
-      actionGroup.add(createModelAction(
-          LLAMA_CPP,
-          getLlamaCppPresentationText(),
-          Icons.Llama,
-          presentation));
-    }
-    if (availableProviders.contains(OLLAMA)) {
-      actionGroup.addSeparator("Ollama");
-      createOllamaModelAction("Default model", presentation);
-      ApplicationManager.getApplication()
-          .getService(OllamaSettings.class)
-          .getState()
-          .getAvailableModels()
-          .forEach(model ->
-              actionGroup.add(createOllamaModelAction(model, presentation)));
-    }
+
+//    if (availableProviders.contains(CODEGPT)) {
+//      actionGroup.addSeparator("CodeGPT");
+//      actionGroup.addAll(getCodeGPTModelActions(project, presentation));
+//    }
+//    if (availableProviders.contains(OPENAI)) {
+//      actionGroup.addSeparator("OpenAI");
+//      List.of(
+//              OpenAIChatCompletionModel.GPT_4_O,
+//              OpenAIChatCompletionModel.GPT_4_VISION_PREVIEW,
+//              OpenAIChatCompletionModel.GPT_4_0125_128k,
+//              OpenAIChatCompletionModel.GPT_3_5_0125_16k)
+//          .forEach(model -> actionGroup.add(createOpenAIModelAction(model, presentation)));
+//    }
+//    if (availableProviders.contains(CUSTOM_OPENAI)) {
+//      actionGroup.addSeparator("Custom OpenAI");
+//      actionGroup.add(createModelAction(
+//          CUSTOM_OPENAI,
+//          ApplicationManager.getApplication().getService(CustomServiceSettings.class)
+//              .getState()
+//              .getTemplate()
+//              .getProviderName(),
+//          Icons.OpenAI,
+//          presentation));
+//    }
+//    if (availableProviders.contains(ANTHROPIC)) {
+//      actionGroup.addSeparator("Anthropic");
+//      actionGroup.add(createModelAction(
+//          ANTHROPIC,
+//          "Anthropic (Claude)",
+//          Icons.Anthropic,
+//          presentation));
+//    }
+//    if (availableProviders.contains(AZURE)) {
+//      actionGroup.addSeparator("Azure");
+//      actionGroup.add(
+//          createModelAction(AZURE, "Azure OpenAI", Icons.Azure, presentation));
+//    }
+//    if (availableProviders.contains(GOOGLE)) {
+//      actionGroup.addSeparator("Google");
+//      actionGroup.add(createModelAction(
+//          GOOGLE,
+//          "Google (Gemini)",
+//          Icons.Google,
+//          presentation));
+//    }
+//    if (availableProviders.contains(LLAMA_CPP)) {
+//      actionGroup.addSeparator("LLaMA C/C++");
+//      actionGroup.add(createModelAction(
+//          LLAMA_CPP,
+//          getLlamaCppPresentationText(),
+//          Icons.Llama,
+//          presentation));
+//    }
+//    if (availableProviders.contains(OLLAMA)) {
+//      actionGroup.addSeparator("Ollama");
+//      createOllamaModelAction("Default model", presentation);
+//      ApplicationManager.getApplication()
+//          .getService(OllamaSettings.class)
+//          .getState()
+//          .getAvailableModels()
+//          .forEach(model ->
+//              actionGroup.add(createOllamaModelAction(model, presentation)));
+//    }
 
     return actionGroup;
   }
@@ -176,6 +180,12 @@ public class ModelComboBoxAction extends ComboBoxAction {
             .findFirst();
         templatePresentation.setIcon(model.map(CodeGPTModel::getIcon).orElse(Icons.CodeGPTModel));
         templatePresentation.setText(model.map(CodeGPTModel::getName).orElse("Unknown"));
+        break;
+      case ZHENGYAN:
+        templatePresentation.setIcon(Icons.Zhengyan);
+        templatePresentation.setText(
+                ZhengyanModel.findByCode(ZhengyanSettings.getCurrentState().getModel())
+                        .getDescription());
         break;
       case OPENAI:
         templatePresentation.setIcon(Icons.OpenAI);
@@ -361,4 +371,35 @@ public class ModelComboBoxAction extends ComboBoxAction {
       }
     };
   }
+
+  private AnAction createZhengyanModelAction(
+          ZhengyanModel model,
+          Presentation comboBoxPresentation) {
+    createModelAction(ZHENGYAN, model.getDescription(), Icons.Zhengyan,
+            comboBoxPresentation);
+    return new DumbAwareAction(model.getDescription(), "", Icons.Zhengyan) {
+      @Override
+      public void update(@NotNull AnActionEvent event) {
+        var presentation = event.getPresentation();
+        presentation.setEnabled(!presentation.getText().equals(comboBoxPresentation.getText()));
+      }
+
+      @Override
+      public void actionPerformed(@NotNull AnActionEvent e) {
+        ZhengyanSettings.getCurrentState().setModel(model.getCode());
+        handleModelChange(
+                ZHENGYAN,
+                model.getDescription(),
+                model.getCode(),
+                Icons.Zhengyan,
+                comboBoxPresentation);
+      }
+
+      @Override
+      public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
+      }
+    };
+  }
+
 }

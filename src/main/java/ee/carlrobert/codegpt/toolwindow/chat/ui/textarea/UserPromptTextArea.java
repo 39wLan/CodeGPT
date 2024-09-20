@@ -175,7 +175,7 @@ public class UserPromptTextArea extends JPanel {
     add(textArea, BorderLayout.CENTER);
 
     stopButton = new IconActionButton(
-        new AnAction("Stop", "Stop current inference", AllIcons.Actions.Suspend) {
+        new AnAction("停止", "停止生成", AllIcons.Actions.Suspend) {
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {
             var handler = requestHandlerRef.get();
@@ -190,7 +190,7 @@ public class UserPromptTextArea extends JPanel {
     flowLayout.setHgap(8);
     JPanel iconsPanel = new JPanel(flowLayout);
     iconsPanel.add(new IconActionButton(
-        new AnAction("Send Message", "Send message", Icons.Send) {
+        new AnAction("发送", "发送消息", Icons.Send) {
           @Override
           public void actionPerformed(@NotNull AnActionEvent e) {
             handleSubmit();

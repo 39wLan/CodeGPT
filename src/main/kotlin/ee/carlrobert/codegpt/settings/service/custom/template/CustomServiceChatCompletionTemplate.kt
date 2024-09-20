@@ -30,12 +30,22 @@ enum class CustomServiceChatCompletionTemplate(
             )
         )
     ),
+    ZY_CHAT_GPT(
+            "https://zhengyan.sinosig.com/ai/ability/gpt/v1/chat",
+            getZYHeaders("Authorization",ZY_GPT_KEY),
+            getZYBodyParams(emptyMap())
+    ),
+    ZY_ACODEX_GPT(
+            "https://zhengyan.sinosig.com/ai/ability/gpt/v1/chat",
+            getZYHeaders("Authorization",ZY_GPT_KEY),
+            getZYBodyParams(emptyMap())
+    ),
     FIREWORKS(
         "https://api.fireworks.ai/inference/v1/chat/completions",
         getDefaultHeadersWithAuthentication(),
         getDefaultBodyParams(
             mapOf(
-                "model" to "accounts/fireworks/models/llama-v2-7b-chat",
+                "model" to "accounts/fireworks/config/llama-v2-7b-chat",
                 "max_tokens" to 1024
             )
         )
@@ -118,6 +128,13 @@ enum class CustomServiceChatCompletionTemplate(
     );
 }
 
+private  const val ZY_GPT_KEY = "eyJhbGciOiJIUzUxMiJ9.eyJidXNpbmVzc19uYW1lIjoi6ZuG5ZuiL" +
+        "eWuueWZqOS6kSIsImtleV90eXBlIjpudWxsLCJncmFudF90eXBlIjoiYWNjZXNzX3Rva2VuIiwiYXBwSWQiOiJ" +
+        "HMjk5IiwicmV0dXJuX1VybCI6bnVsbCwiYnVzaW5lc3NfY29kZSI6bnVsbCwibm90aWZ5X3VybC" +
+        "I6bnVsbCwiZXhwIjoyMDAwNzA4NjczLCJjYWxsX3R5cGUiOm51bGx9.EQah93qqVJ2A86XoZfu4" +
+        "J2Ze9BxPjPZ5K4pcQcoinof1U7xE7UGFvz0GvmHichaGQtX3REMUQKHzbzEzrZhxtQ"
+
+
 private fun getDefaultHeadersWithAuthentication(): MutableMap<String, String> {
     return getDefaultHeaders("Authorization", "Bearer \$CUSTOM_SERVICE_API_KEY")
 }
@@ -139,11 +156,30 @@ private fun getDefaultHeaders(additionalHeaders: Map<String, String>): MutableMa
     return defaultHeaders
 }
 
+fun getZYHeaders(key: String, value: String): MutableMap<String, String> {
+    return getZYHeaders(mapOf(key to value))
+}
+
+private fun getZYHeaders(additionalHeaders: Map<String, String>): MutableMap<String, String> {
+    val defaultHeaders = mutableMapOf(
+            "Content-Type" to "application/json",
+    )
+    defaultHeaders.putAll(additionalHeaders)
+    return defaultHeaders
+}
+
 private fun getDefaultBodyParams(additionalParams: Map<String, Any>): MutableMap<String, Any> {
     val defaultParams = mutableMapOf<String, Any>(
         "stream" to true,
         "messages" to "\$OPENAI_MESSAGES",
         "temperature" to 0.1
+    )
+    defaultParams.putAll(additionalParams)
+    return defaultParams
+}
+
+fun getZYBodyParams(additionalParams: Map<String, Any>): MutableMap<String, Any> {
+    val defaultParams = mutableMapOf<String, Any>(
     )
     defaultParams.putAll(additionalParams)
     return defaultParams

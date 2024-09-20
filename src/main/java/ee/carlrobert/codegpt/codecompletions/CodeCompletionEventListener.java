@@ -53,6 +53,9 @@ class CodeCompletionEventListener implements CompletionEventListener<String> {
                 requestDetails.getSuffix(),
                 messageBuilder.toString());*/
         var response = messageBuilder.toString();
+        System.out.println("res-start");
+        System.out.println(response);
+        System.out.println("res-end");
         handleComplete(
             response.contains("\n") ? response.substring(0, response.indexOf("\n")) : response);
       }
@@ -62,6 +65,9 @@ class CodeCompletionEventListener implements CompletionEventListener<String> {
   }
 
   private void handleComplete(String processedOutput) {
+    System.out.println("Output-start");
+    System.out.println(processedOutput);
+    System.out.println("Output-end");
     PREVIOUS_INLAY_TEXT.set(editor, processedOutput);
     CodeGPTEditorManager.getInstance().disposeEditorInlays(editor);
     SwingUtilities.invokeLater(() -> {

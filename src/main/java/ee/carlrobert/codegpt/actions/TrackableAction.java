@@ -7,6 +7,8 @@ import ee.carlrobert.codegpt.telemetry.TelemetryAction;
 import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.event.ActionEvent;
+
 public abstract class TrackableAction extends AnAction {
 
   private final ActionType actionType;

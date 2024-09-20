@@ -14,7 +14,7 @@ public class EditAction extends AbstractAction {
   private final EditorEx editor;
 
   public EditAction(@NotNull EditorEx editor) {
-    super("Edit Source", Actions.EditSource);
+    super("编辑代码", Actions.EditSource);
     this.editor = editor;
   }
 
@@ -31,8 +31,8 @@ public class EditAction extends AbstractAction {
 
     var menuItem = (JBMenuItem) event.getSource();
     menuItem.setText(viewer
-        ? CodeGPTBundle.get("toolwindow.chat.editor.action.edit.title")
-        : CodeGPTBundle.get("toolwindow.chat.editor.action.disableEditing.title"));
+        ? "编辑代码"
+        : "禁用编辑");
     menuItem.setIcon(viewer ? Actions.EditSource : Diff.Lock);
   }
 }

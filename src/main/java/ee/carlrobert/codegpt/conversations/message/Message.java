@@ -18,6 +18,135 @@ public class Message {
   private List<String> referencedFilePaths;
   private @Nullable String imageFilePath;
 
+
+
+  private String sessionId;
+  private String actionType;
+  private String startTime;
+  private long startTmp;
+  private String endTime;
+  private long costTime;
+  private int resStatus;
+  private String codeLanguage;
+  private String modelName;
+  private String selectedText;
+  private String prefix;
+  private String context;
+  private String smallestIntersectingMethod;
+  private boolean isSuccess;
+
+  public String getSessionId() {
+    return sessionId;
+  }
+
+  public void setSessionId(String sessionId) {
+    this.sessionId = sessionId;
+  }
+
+  public String getActionType() {
+    return actionType;
+  }
+
+  public void setActionType(String actionType) {
+    this.actionType = actionType;
+  }
+
+  public String getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
+
+  public String getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
+
+  public long getCostTime() {
+    return costTime;
+  }
+
+  public void setCostTime(long costTime) {
+    this.costTime = costTime;
+  }
+
+  public int getResStatus() {
+    return resStatus;
+  }
+
+  public void setResStatus(int resStatus) {
+    this.resStatus = resStatus;
+  }
+
+  public String getCodeLanguage() {
+    return codeLanguage;
+  }
+
+  public void setCodeLanguage(String codeLanguage) {
+    this.codeLanguage = codeLanguage;
+  }
+
+  public String getModelName() {
+    return modelName;
+  }
+
+  public void setModelName(String modelName) {
+    this.modelName = modelName;
+  }
+
+  public String getSelectedText() {
+    return selectedText;
+  }
+
+  public void setSelectedText(String selectedText) {
+    this.selectedText = selectedText;
+  }
+
+  public String getPrefix() {
+    return prefix;
+  }
+
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
+  }
+
+  public String getContext() {
+    return context;
+  }
+
+  public void setContext(String context) {
+    this.context = context;
+  }
+
+  public String getSmallestIntersectingMethod() {
+    return smallestIntersectingMethod;
+  }
+
+  public void setSmallestIntersectingMethod(String smallestIntersectingMethod) {
+    this.smallestIntersectingMethod = smallestIntersectingMethod;
+  }
+
+  public boolean isSuccess() {
+    return isSuccess;
+  }
+
+  public void setSuccess(boolean success) {
+    isSuccess = success;
+  }
+
+  public long getStartTmp() {
+    return startTmp;
+  }
+
+  public void setStartTmp(long startTmp) {
+    this.startTmp = startTmp;
+  }
+
   public Message(String prompt, String response) {
     this(prompt);
     this.response = response;

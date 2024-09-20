@@ -27,7 +27,7 @@ plugins {
 }
 
 group = properties("pluginGroup").get()
-version = properties("pluginVersion").get() + "-" + properties("pluginSinceBuild").get()
+version = properties("pluginVersion").get()
 
 checkstyle {
   toolVersion = libs.versions.checkstyle.get()
@@ -93,7 +93,7 @@ tasks {
 
   patchPluginXml {
     enabled = true
-    version.set(properties("pluginVersion").get() + "-" + properties("pluginSinceBuild").get())
+    version.set(properties("pluginVersion"))
     sinceBuild.set(properties("pluginSinceBuild"))
     untilBuild.set(properties("pluginUntilBuild"))
 
@@ -114,7 +114,7 @@ tasks {
     changeNotes.set(properties("pluginVersion").map { pluginVersion ->
       with(changelog) {
         renderItem(
-          (getOrNull(pluginVersion) ?: getUnreleased())
+          (getOrNull(pluginVersion) ?: getLatest())
             .withHeader(false)
             .withEmptySections(false),
           Changelog.OutputType.HTML,

@@ -1,5 +1,6 @@
 package ee.carlrobert.codegpt.completions;
 
+import static ee.carlrobert.codegpt.client.Zhengyan.config.ZhengyanModel.ACodex;
 import static ee.carlrobert.codegpt.completions.ConversationType.FIX_COMPILE_ERRORS;
 import static ee.carlrobert.codegpt.credentials.CredentialsStore.CredentialKey.CUSTOM_SERVICE_API_KEY;
 import static ee.carlrobert.codegpt.util.file.FileUtil.getResourceContent;
@@ -13,6 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.application.ApplicationManager;
 import ee.carlrobert.codegpt.EncodingManager;
 import ee.carlrobert.codegpt.ReferencedFile;
+import ee.carlrobert.codegpt.client.Zhengyan.completion.ZhengyanChatCompletionMessage;
+import ee.carlrobert.codegpt.client.Zhengyan.completion.ZhengyanChatCompletionRequest;
+import ee.carlrobert.codegpt.client.Zhengyan.completion.ZhengyanChatCompletionStandardMessage;
+import ee.carlrobert.codegpt.client.Zhengyan.config.ZhengyanModel;
+import ee.carlrobert.codegpt.codecompletions.InfillRequestDetails;
 import ee.carlrobert.codegpt.completions.llama.LlamaModel;
 import ee.carlrobert.codegpt.completions.llama.PromptTemplate;
 import ee.carlrobert.codegpt.conversations.Conversation;
@@ -85,6 +91,9 @@ public class CompletionRequestProvider {
 
   public static final String EDIT_CODE_SYSTEM_PROMPT =
       getResourceContent("/prompts/edit-code.txt");
+
+  public static final String ZY_CODE_PROMPT =
+          getResourceContent("/prompts/zy-edit-code.txt");
 
   private final EncodingManager encodingManager = EncodingManager.getInstance();
   private final Conversation conversation;
@@ -226,6 +235,25 @@ public class CompletionRequestProvider {
         .setTemperature(configuration.getTemperature()).build();
   }
 
+  public ZhengyanChatCompletionRequest buildZhengyanChatCompletionRequest(
+          @Nullable String model,
+          CallParameters callParameters) {
+    return new ZhengyanChatCompletionRequest.Builder(buildZhengyanMessages(model, callParameters))
+            .setModel(model)
+            .setStream(false)
+            .build();
+  }
+
+//  public ZhengyanChatCompletionRequest buildZhengyanCodeCompletionRequest(
+//          @Nullable String model,
+//          InfillRequestDetails requestDetails) {
+//    return new ZhengyanChatCompletionRequest.Builder(buildZhengyanMessages(model, requestDetails))
+//            .setModel(model)
+//            .setStream(false)
+//            .build();
+//  }
+
+
   public GoogleCompletionRequest buildGoogleChatCompletionRequest(
       @Nullable String model,
       CallParameters callParameters) {
@@ -252,6 +280,51 @@ public class CompletionRequestProvider {
     return buildCustomOpenAIChatCompletionRequest(settings, messages, streamRequest,
         CredentialsStore.getCredential(CUSTOM_SERVICE_API_KEY));
   }
+
+
+
+
+  private static Request buildZhengyanChatCompletionRequest(
+          CustomServiceChatCompletionSettingsState settings,
+          List<OpenAIChatCompletionMessage> messages,
+          boolean streamRequest,
+          String credential) {
+    var requestBuilder = new Request.Builder().url(requireNonNull(settings.getUrl()).trim());
+    for (var entry : settings.getHeaders().entrySet()) {
+      String value = entry.getValue();
+      if (credential != null && value.contains("$CUSTOM_SERVICE_API_KEY")) {
+        value = value.replace("$CUSTOM_SERVICE_API_KEY", credential);
+      }
+      requestBuilder.addHeader(entry.getKey(), value);
+    }
+
+    var body = settings.getBody().entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> {
+                      if (!streamRequest && "stream".equals(entry.getKey())) {
+                        return false;
+                      }
+
+                      var value = entry.getValue();
+                      if (value instanceof String string && "$OPENAI_MESSAGES".equals(string.trim())) {
+                        return messages;
+                      }
+                      return value;
+                    }
+            ));
+
+    try {
+      var requestBody = RequestBody.create(new ObjectMapper()
+              .writerWithDefaultPrettyPrinter()
+              .writeValueAsString(body)
+              .getBytes(StandardCharsets.UTF_8));
+      return requestBuilder.post(requestBody).build();
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
 
   private static Request buildCustomOpenAIChatCompletionRequest(
       CustomServiceChatCompletionSettingsState settings,
@@ -443,6 +516,31 @@ public class CompletionRequestProvider {
     return messages;
   }
 
+  private List<ZhengyanChatCompletionMessage> buildZhengyanMessages(CallParameters callParameters) {
+    var message = callParameters.getMessage();
+    var messages = new ArrayList<ZhengyanChatCompletionMessage>();
+    if (callParameters.getConversationType() == ConversationType.DEFAULT) {
+      String systemPrompt = ConfigurationSettings.getCurrentState().getSystemPrompt();
+      messages.add(new ZhengyanChatCompletionStandardMessage("system", systemPrompt));
+    }
+    if (callParameters.getConversationType() == ConversationType.FIX_COMPILE_ERRORS) {
+      messages.add(
+              new ZhengyanChatCompletionStandardMessage("system", FIX_COMPILE_ERRORS_SYSTEM_PROMPT));
+    }
+    for (var prevMessage : conversation.getMessages()) {
+      if (callParameters.isRetry() && prevMessage.getId().equals(message.getId())) {
+        break;
+      }
+      messages.add(new ZhengyanChatCompletionStandardMessage("user", prevMessage.getPrompt()));
+      messages.add(
+              new ZhengyanChatCompletionStandardMessage("assistant", prevMessage.getResponse())
+      );
+    }
+    messages.add(new ZhengyanChatCompletionStandardMessage("user", message.getPrompt()));
+    return messages;
+  }
+
+
   private List<OpenAIChatCompletionMessage> buildOpenAIMessages(
       @Nullable String model,
       CallParameters callParameters) {
@@ -466,6 +564,40 @@ public class CompletionRequestProvider {
       return messages;
     }
     return tryReducingMessagesOrThrow(messages, totalUsage, modelMaxTokens);
+  }
+
+  private List<ZhengyanChatCompletionMessage> buildZhengyanMessages(
+          @Nullable String model,
+          CallParameters callParameters) {
+    var messages = buildZhengyanMessages(callParameters);
+
+    if (model == null) {
+      return messages;
+    }
+    int totalUsage=0;
+    if(!model.equals(ACodex.getCode())){
+      totalUsage = messages.parallelStream()
+              .mapToInt(encodingManager::countMessageTokens)
+              .sum();
+    }else {
+      List<ZhengyanChatCompletionMessage> list = new ArrayList<>();
+      list.add(messages.get(messages.size()-1));
+      totalUsage = list.parallelStream()
+              .mapToInt(encodingManager::countMessageTokens)
+              .sum();
+    }
+
+    int modelMaxTokens;
+    try {
+      modelMaxTokens = ZhengyanModel.findByCode(model).getMaxTokens();
+
+      if (totalUsage <= modelMaxTokens) {
+        return messages;
+      }
+    } catch (NoSuchElementException ex) {
+      return messages;
+    }
+    return tryReducingZhengyanMessagesOrThrow(messages, totalUsage, modelMaxTokens);
   }
 
   private List<GoogleCompletionContent> buildGoogleMessages(CallParameters callParameters) {
@@ -549,6 +681,32 @@ public class CompletionRequestProvider {
       List<OpenAIChatCompletionMessage> messages,
       int totalUsage,
       int modelMaxTokens) {
+    if (!ConversationsState.getInstance().discardAllTokenLimits) {
+      if (!conversation.isDiscardTokenLimit()) {
+        throw new TotalUsageExceededException();
+      }
+    }
+
+    // skip the system prompt
+    for (int i = 1; i < messages.size(); i++) {
+      if (totalUsage <= modelMaxTokens) {
+        break;
+      }
+
+      var message = messages.get(i);
+      if (message instanceof OpenAIChatCompletionStandardMessage) {
+        totalUsage -= encodingManager.countMessageTokens(message);
+        messages.set(i, null);
+      }
+    }
+
+    return messages.stream().filter(Objects::nonNull).toList();
+  }
+
+  private List<ZhengyanChatCompletionMessage> tryReducingZhengyanMessagesOrThrow(
+          List<ZhengyanChatCompletionMessage> messages,
+          int totalUsage,
+          int modelMaxTokens) {
     if (!ConversationsState.getInstance().discardAllTokenLimits) {
       if (!conversation.isDiscardTokenLimit()) {
         throw new TotalUsageExceededException();

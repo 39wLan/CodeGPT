@@ -3,6 +3,7 @@ package ee.carlrobert.codegpt.completions;
 import static ee.carlrobert.codegpt.credentials.CredentialsStore.getCredential;
 
 import com.intellij.openapi.application.ApplicationManager;
+import ee.carlrobert.codegpt.client.Zhengyan.ZhengyanClient;
 import ee.carlrobert.codegpt.credentials.CredentialsStore.CredentialKey;
 import ee.carlrobert.codegpt.settings.advanced.AdvancedSettings;
 import ee.carlrobert.codegpt.settings.service.anthropic.AnthropicSettings;
@@ -30,6 +31,10 @@ public class CompletionClientProvider {
     return new CodeGPTClient(
         getCredential(CredentialKey.CODEGPT_API_KEY),
         getDefaultClientBuilder());
+  }
+
+  public static ZhengyanClient getZhengyanClient(){
+    return new ZhengyanClient(getZYClientBuilder());
   }
 
   public static OpenAIClient getOpenAIClient() {
@@ -95,24 +100,32 @@ public class CompletionClientProvider {
         .build(getDefaultClientBuilder());
   }
 
+  public static OkHttpClient.Builder getZYClientBuilder(){
+    OkHttpClient.Builder builder = new OkHttpClient.Builder();
+    var advancedSettings = AdvancedSettings.getCurrentState();
+    return builder
+            .connectTimeout(advancedSettings.getConnectTimeout(), TimeUnit.SECONDS)
+            .readTimeout(advancedSettings.getReadTimeout(), TimeUnit.SECONDS);
+  }
+
   public static OkHttpClient.Builder getDefaultClientBuilder() {
     OkHttpClient.Builder builder = new OkHttpClient.Builder();
     var advancedSettings = AdvancedSettings.getCurrentState();
-    var proxyHost = advancedSettings.getProxyHost();
-    var proxyPort = advancedSettings.getProxyPort();
-    if (!proxyHost.isEmpty() && proxyPort != 0) {
-      builder.proxy(
-          new Proxy(advancedSettings.getProxyType(), new InetSocketAddress(proxyHost, proxyPort)));
-      if (advancedSettings.isProxyAuthSelected()) {
-        builder.proxyAuthenticator((route, response) ->
-            response.request()
-                .newBuilder()
-                .header("Proxy-Authorization", Credentials.basic(
-                    advancedSettings.getProxyUsername(),
-                    advancedSettings.getProxyPassword()))
-                .build());
-      }
-    }
+//    var proxyHost = advancedSettings.getProxyHost();
+//    var proxyPort = advancedSettings.getProxyPort();
+//    if (!proxyHost.isEmpty() && proxyPort != 0) {
+//      builder.proxy(
+//          new Proxy(advancedSettings.getProxyType(), new InetSocketAddress(proxyHost, proxyPort)));
+//      if (advancedSettings.isProxyAuthSelected()) {
+//        builder.proxyAuthenticator((route, response) ->
+//            response.request()
+//                .newBuilder()
+//                .header("Proxy-Authorization", Credentials.basic(
+//                    advancedSettings.getProxyUsername(),
+//                    advancedSettings.getProxyPassword()))
+//                .build());
+//      }
+//    }
 
     return builder
         .connectTimeout(advancedSettings.getConnectTimeout(), TimeUnit.SECONDS)

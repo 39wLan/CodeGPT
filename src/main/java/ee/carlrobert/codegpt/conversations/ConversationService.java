@@ -20,7 +20,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.UUID;
+
+import ee.carlrobert.codegpt.settings.service.zhengyan.ZhengyanSettings;
 import org.jetbrains.annotations.NotNull;
+
+import static ee.carlrobert.codegpt.client.Zhengyan.util.ConvertUtil.generateSessionID;
 
 @Service
 public final class ConversationService {
@@ -46,6 +50,7 @@ public final class ConversationService {
   public Conversation createConversation(String clientCode) {
     var conversation = new Conversation();
     conversation.setId(UUID.randomUUID());
+    conversation.setSession_id(generateSessionID());
     conversation.setClientCode(clientCode);
     conversation.setCreatedOn(LocalDateTime.now());
     conversation.setUpdatedOn(LocalDateTime.now());
@@ -196,6 +201,7 @@ public final class ConversationService {
           .getModel();
       case OPENAI -> OpenAISettings.getCurrentState().getModel();
       case CUSTOM_OPENAI -> "CustomService";
+      case ZHENGYAN -> ZhengyanSettings.getCurrentState().getModel();
       case ANTHROPIC -> AnthropicSettings.getCurrentState().getModel();
       case AZURE -> AzureSettings.getCurrentState().getDeploymentId();
       case LLAMA_CPP -> {

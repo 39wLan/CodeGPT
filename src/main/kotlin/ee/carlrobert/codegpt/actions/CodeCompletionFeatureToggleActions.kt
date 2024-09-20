@@ -12,6 +12,7 @@ import ee.carlrobert.codegpt.settings.service.custom.CustomServiceSettings
 import ee.carlrobert.codegpt.settings.service.llama.LlamaSettings
 import ee.carlrobert.codegpt.settings.service.ollama.OllamaSettings
 import ee.carlrobert.codegpt.settings.service.openai.OpenAISettings
+import ee.carlrobert.codegpt.settings.service.zhengyan.ZhengyanSettings
 
 abstract class CodeCompletionFeatureToggleActions(
     private val enableFeatureAction: Boolean
@@ -19,6 +20,8 @@ abstract class CodeCompletionFeatureToggleActions(
 
     override fun actionPerformed(e: AnActionEvent) = when (GeneralSettings.getSelectedService()) {
         CODEGPT -> service<CodeGPTServiceSettings>().state.codeCompletionSettings::codeCompletionsEnabled::set
+
+        ZHENGYAN-> ZhengyanSettings.getCurrentState()::setCodeCompletionsEnabled
 
         OPENAI -> OpenAISettings.getCurrentState()::setCodeCompletionsEnabled
 
@@ -42,6 +45,7 @@ abstract class CodeCompletionFeatureToggleActions(
         e.presentation.isEnabled = when (selectedService) {
             CODEGPT,
             OPENAI,
+            ZHENGYAN,
             CUSTOM_OPENAI,
             LLAMA_CPP,
             OLLAMA -> true

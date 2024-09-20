@@ -81,8 +81,8 @@ public class ResponsePanel extends JPanel {
     public void addReloadAction(Runnable onReload) {
       addIconActionButton(new IconActionButton(
           new AnAction(
-              CodeGPTBundle.get("toolwindow.chat.response.action.reloadResponse.text"),
-              CodeGPTBundle.get("toolwindow.chat.response.action.reloadResponse.description"),
+              "重新生成结果",
+                  "重新生成结果",
               Actions.Refresh) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
@@ -114,7 +114,7 @@ public class ResponsePanel extends JPanel {
 
     private JBLabel getIconLabel() {
       return new JBLabel(
-          CodeGPTBundle.get("project.label"),
+          "常青藤",
           Icons.Default,
           SwingConstants.LEADING)
           .setAllowAutoWrapping(true)

@@ -45,10 +45,10 @@ public class DiffAction extends AbstractAction {
     var resultEditorFile = FileUtil.getEditorFile(selectedTextEditor);
     var diffContentFactory = DiffContentFactory.getInstance();
     var request = new SimpleDiffRequest(
-        CodeGPTBundle.get("editor.diff.title"),
+        "代码比对",
         diffContentFactory.create(project, FileUtil.getEditorFile(editor)),
         diffContentFactory.create(project, resultEditorFile),
-        CodeGPTBundle.get("editor.diff.local.content.title"),
+        "GPT生成代码",
         resultEditorFile.getName());
     request.putUserData(
         DiffUserDataKeys.SCROLL_TO_LINE,

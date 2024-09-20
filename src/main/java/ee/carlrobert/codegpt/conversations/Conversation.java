@@ -1,14 +1,19 @@
 package ee.carlrobert.codegpt.conversations;
 
 import ee.carlrobert.codegpt.conversations.message.Message;
+import org.apache.commons.lang3.StringUtils;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static ee.carlrobert.codegpt.client.Zhengyan.util.ConvertUtil.generateSessionID;
+
 public class Conversation {
 
   private UUID id;
+  private String session_id;
   private List<Message> messages = new ArrayList<>();
   private String clientCode;
   private String model;
@@ -18,6 +23,18 @@ public class Conversation {
 
   public UUID getId() {
     return id;
+  }
+
+  public String getSession_id() {
+
+    if(StringUtils.isEmpty(session_id)){
+      this.session_id=generateSessionID();
+    }
+    return session_id;
+  }
+
+  public void setSession_id(String session_id) {
+    this.session_id = session_id;
   }
 
   public void setId(UUID id) {

@@ -125,7 +125,7 @@ public class GenerateGitCommitMessageAction extends AnAction {
       public void onError(ErrorDetails error, Throwable ex) {
         Notifications.Bus.notify(new Notification(
             "CodeGPT Notification Group",
-            "CodeGPT",
+            "常青藤",
             error.getMessage(),
             NotificationType.ERROR));
       }

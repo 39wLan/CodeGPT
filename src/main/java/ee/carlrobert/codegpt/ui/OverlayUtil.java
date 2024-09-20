@@ -47,7 +47,7 @@ public class OverlayUtil {
 
   public static Notification getDefaultNotification(
       @NotNull String content, @NotNull NotificationType type, @NotNull AnAction... actions) {
-    var notification = new Notification(NOTIFICATION_GROUP_ID, "CodeGPT", content, type);
+    var notification = new Notification(NOTIFICATION_GROUP_ID, "常青藤", content, type);
     Arrays.asList(actions).forEach(notification::addAction);
     return notification;
   }
@@ -59,7 +59,7 @@ public class OverlayUtil {
 
   public static Notification getStickyNotification(
       @NotNull String content, @NotNull NotificationType type, @NotNull AnAction... actions) {
-    var notification = new Notification(NOTIFICATION_GROUP_STICKY_ID, "CodeGPT", content, type);
+    var notification = new Notification(NOTIFICATION_GROUP_STICKY_ID, "常青藤", content, type);
     Arrays.asList(actions).forEach(notification::addAction);
     return notification;
   }
@@ -93,8 +93,8 @@ public class OverlayUtil {
 
   public static int showDeleteConversationDialog() {
     return Messages.showYesNoDialog(
-        CodeGPTBundle.get("dialog.deleteConversation.description"),
-        CodeGPTBundle.get("dialog.deleteConversation.title"),
+        "您确定要删除此对话吗？",
+        "删除对话",
         Default);
   }
 
